@@ -30,13 +30,9 @@
         }
         .card {
             transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .card-link {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-        }
-        .card-link:hover .card {
+        .card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
@@ -69,6 +65,9 @@
             color: #92400E;
             padding: 1rem;
             border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .modal {
+            transition: opacity 0.3s ease;
         }
         .timetable-checkbox {
             display: none; /* Hide the default checkbox */
@@ -194,6 +193,20 @@
         </footer>
     </div>
     
+    <!-- Modal Structure -->
+    <div id="pdf-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-800">과목 상세 정보</h3>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <div class="flex-grow p-4">
+                <iframe id="pdf-iframe" src="" class="w-full h-full border-0"></iframe>
+            </div>
+        </div>
+    </div>
+
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const PDF_FILE = 'https://comet-lee.github.io/kyunggi-guide/2025%ED%95%99%EB%85%84%EB%8F%84%20%EC%9E%85%ED%95%99%EC%83%9D%20%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95%20%EC%84%A0%ED%83%9D%20%EA%B0%80%EC%9D%B4%EB%93%9C%EB%B6%81.pdf';
@@ -348,12 +361,160 @@
                 { name: '스포츠 과학', type: '진로선택', grade: '3-2', pdfPage: 106, description: '스포츠 경기 기능, 방법, 전략 등을 토대로 스포츠 경기에 참여하면서 스포츠를 효율적으로 수행하는 데 필요한 과학적 원리를 이론적 수준에서 적용하고 실천하는 과정을 통해 스포츠에 대한 과학적 안목과 수행 능력을 길러 주는 과목이다.'}
             ]
         };
+        const timetableData = {
+            '2-1': {
+                limit: 5,
+                courses: {
+                    '국어': [{ name: '주제 탐구 독서', id: '21_kor_1', group: '국어' }],
+                    '수학': [{ name: '기하', id: '21_math_1', group: '수학' }],
+                    '영어': [{ name: '세계 문화와 영어', id: '21_eng_1', group: '영어'}],
+                    '사회': [
+                        { name: '세계시민과 지리', id: '21_soc_1', group: '사회' },
+                        { name: '현대사회와 윤리', id: '21_soc_2', group: '사회' },
+                        { name: '법과 사회', id: '21_soc_3', group: '사회' },
+                        { name: '동아시아 역사 기행', id: '21_soc_4', group: '사회' },
+                        { name: '금융과 경제생활', id: '21_soc_5', group: '사회' },
+                    ],
+                    '과학': [
+                        { name: '물리학', id: '21_sci_1', group: '과학' },
+                        { name: '화학', id: '21_sci_2', group: '과학' },
+                        { name: '지구과학', id: '21_sci_3', group: '과학' },
+                        { name: '세포와 물질대사', id: '21_sci_4', group: '과학' },
+                    ],
+                    '기술·가정/정보': [
+                        { name: '생활과학 탐구', id: '21_tech_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '데이터 과학', id: '21_tech_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '제2외국어/한문': [
+                        { name: '스페인어', id: '21_lang_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '일본어', id: '21_lang_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '예술': [
+                        { name: '음악 연주와 창작', id: '21_art_1', group: '예술' },
+                        { name: '미술 창작', id: '21_art_2', group: '예술' },
+                    ]
+                }
+            },
+            '2-2': {
+                limit: 5,
+                courses: {
+                    '국어': [{ name: '문학과 영상', id: '22_kor_1', group: '국어' }],
+                    '수학': [{ name: '인공지능 수학', id: '22_math_1', group: '수학' }],
+                    '영어': [{ name: '영미 문학 읽기', id: '22_eng_1', group: '영어' }],
+                    '사회': [
+                        { name: '사회와 문화', id: '22_soc_1', group: '사회' },
+                        { name: '세계사', id: '22_soc_2', group: '사회' },
+                        { name: '정치', id: '22_soc_3', group: '사회' },
+                        { name: '윤리문제 탐구', id: '22_soc_4', group: '사회' },
+                        { name: '기후변화와 지속가능한 세계', id: '22_soc_5', group: '사회' },
+                    ],
+                    '과학': [
+                        { name: '생명과학', id: '22_sci_1', group: '과학' },
+                        { name: '역학과 에너지', id: '22_sci_2', group: '과학' },
+                        { name: '물질과 에너지', id: '22_sci_3', group: '과학' },
+                        { name: '지구시스템과학', id: '22_sci_4', group: '과학' },
+                        { name: '융합과학 탐구', id: '22_sci_5', group: '과학' },
+                    ],
+                     '기술·가정/정보': [
+                        { name: '아동발달과 부모', id: '22_tech_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '정보과학', id: '22_tech_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '제2외국어/한문': [
+                        { name: '스페인어 회화', id: '22_lang_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '일본어 회화', id: '22_lang_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '예술': [
+                         { name: '음악 감상과 비평', id: '22_art_1', group: '예술' },
+                         { name: '미술 감상과 비평', id: '22_art_2', group: '예술' },
+                    ]
+                }
+            },
+            '3-1': {
+                limit: 6,
+                courses: {
+                    '국어': [{ name: '독서 토론과 글쓰기', id: '31_kor_1', group: '국어' }],
+                    '수학': [
+                        { name: '미적분Ⅱ', id: '31_math_1', group: '수학' },
+                        { name: '수학과제 탐구', id: '31_math_2', group: '수학' },
+                    ],
+                    '영어': [{ name: '심화 영어', id: '31_eng_1', group: '영어' }],
+                     '사회': [
+                        { name: '윤리와 사상', id: '31_soc_1', group: '사회' },
+                        { name: '경제', id: '31_soc_2', group: '사회' },
+                        { name: '한국지리 탐구', id: '31_soc_3', group: '사회' },
+                        { name: '사회문제 탐구', id: '31_soc_4', group: '사회' },
+                        { name: '역사로 탐구하는 현대 세계', id: '31_soc_5', group: '사회' },
+                    ],
+                    '과학': [
+                        { name: '전자기와 양자', id: '31_sci_1', group: '과학' },
+                        { name: '화학 반응의 세계', id: '31_sci_2', group: '과학' },
+                        { name: '생물의 유전', id: '31_sci_3', group: '과학' },
+                        { name: '행성우주과학', id: '31_sci_4', group: '과학' },
+                        { name: '기후변화와 환경생태', id: '31_sci_5', group: '과학' },
+                    ],
+                    '기술·가정/정보': [
+                        { name: '지식 재산 일반', id: '31_tech_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '인공지능 기초', id: '31_tech_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '제2외국어/한문': [
+                        { name: '스페인어권 문화', id: '31_lang_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '일본 문화', id: '31_lang_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '예술': [
+                        { name: '음악과 미디어', id: '31_art_1', group: '예술' },
+                        { name: '미술과 매체', id: '31_art_2', group: '예술' },
+                    ]
+                }
+            },
+            '3-2': {
+                limit: 9,
+                courses: {
+                     '국어': [
+                        { name: '매체 의사소통', id: '32_kor_1', group: '국어' },
+                        { name: '언어생활 탐구', id: '32_kor_2', group: '국어' }
+                    ],
+                    '수학': [
+                        { name: '수학과 문화', id: '32_math_1', group: '수학' },
+                        { name: '실용 통계', id: '32_math_2', group: '수학' },
+                    ],
+                    '영어': [
+                        { name: '심화 영어 독해와 작문', id: '32_eng_1', group: '영어' },
+                        { name: '미디어 영어', id: '32_eng_2', group: '영어' },
+                    ],
+                     '사회': [
+                        { name: '국제 관계의 이해', id: '32_soc_1', group: '사회' },
+                        { name: '인문학과 윤리', id: '32_soc_2', group: '사회' },
+                        { name: '도시의 미래 탐구', id: '32_soc_3', group: '사회' },
+                        { name: '여행지리', id: '32_soc_4', group: '사회' },
+                    ],
+                    '과학': [
+                        { name: '과학의 역사와 문화', id: '32_sci_1', group: '과학' },
+                    ],
+                    '기술·가정/정보': [
+                        { name: '창의 공학 설계', id: '32_tech_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '소프트웨어와 생활', id: '32_tech_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '제2외국어/한문': [
+                        { name: '심화 스페인어', id: '32_lang_1', group: '기술·가정/정보/제2외국어/한문' },
+                        { name: '심화 일본어', id: '32_lang_2', group: '기술·가정/정보/제2외국어/한문' },
+                    ],
+                    '예술': [
+                        { name: '음악콘텐츠 제작', id: '32_art_1', group: '예술' },
+                        { name: '조형', id: '32_art_2', group: '예술' },
+                    ]
+                }
+            }
+        };
 
         const courseGrid = document.getElementById('course-grid');
         const socialStudiesContainer = document.getElementById('social-studies-container');
         const scienceContainer = document.getElementById('science-container');
         const groupedCoursesContainer = document.getElementById('grouped-courses-container');
         const filterContainer = document.getElementById('filter-container');
+        const modal = document.getElementById('pdf-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const pdfIframe = document.getElementById('pdf-iframe');
+        const closeModalBtn = document.getElementById('close-modal-btn');
         let currentFilter = '전체';
 
         const getTypeClass = (type) => {
@@ -365,6 +526,19 @@
                 case '융합선택': return style + 'bg-amber-100 text-amber-800';
                 default: return style + 'bg-gray-100 text-gray-800';
             }
+        };
+        
+        const openModal = (pageNumber, courseName) => {
+            if (!pageNumber || !modal || !modalTitle || !pdfIframe) return;
+            modalTitle.textContent = `${courseName} 상세 정보`;
+            pdfIframe.src = `${PDF_FILE}#page=${pageNumber}`;
+            modal.classList.remove('hidden');
+        };
+
+        const closeModal = () => {
+            if(!modal || !pdfIframe) return;
+            modal.classList.add('hidden');
+            pdfIframe.src = '';
         };
 
         const createCourseCard = (course) => {
@@ -579,12 +753,10 @@
             }
         });
         
-        const modalElement = document.getElementById('pdf-modal');
-        const closeModalBtnElement = document.getElementById('close-modal-btn');
-        if (modalElement && closeModalBtnElement) {
-            closeModalBtnElement.addEventListener('click', closeModal);
-            modalElement.addEventListener('click', (e) => {
-                if (e.target === modalElement) {
+        if (modal && closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
                     closeModal();
                 }
             });
@@ -614,4 +786,48 @@
                                         <input type="checkbox" id="${course.id}" name="${semester}" data-group="${course.group || subjectGroup}" class="timetable-checkbox">
                                         <span class="custom-checkbox"></span>
                                         <span class="ml-2 block text-sm text-gray-900">${course.name}</span>
-                                    </label
+                                    </label>`;
+                        });
+                        html += `</div></div>`;
+                    }
+                    html += '</div></div>';
+                }
+                selectionPanel.innerHTML = html;
+                selectionPanel.addEventListener('change', handleCheckboxChange);
+            }
+
+            const handleCheckboxChange = (e) => {
+                if (e.target.type !== 'checkbox') return;
+
+                const semester = e.target.name;
+                const semesterBoxes = Array.from(selectionPanel.querySelectorAll(`input[name="${semester}"]`));
+                const checkedBoxesInSemester = semesterBoxes.filter(box => box.checked);
+                const checkedCount = checkedBoxesInSemester.length;
+                const limit = timetableData[semester].limit;
+
+                semesterBoxes.forEach(box => {
+                    if (!box.checked) {
+                        box.disabled = checkedCount >= limit;
+                    }
+                });
+
+                const allBoxesInSemester = Array.from(selectionPanel.querySelectorAll(`input[name="${semester}"]`));
+                const allCheckedInSemester = allBoxesInSemester.filter(box => box.checked);
+                
+                allBoxesInSemester.forEach(box => {
+                    const customCheckbox = box.nextElementSibling;
+                    customCheckbox.textContent = '';
+                });
+
+                allCheckedInSemester.forEach((box, index) => {
+                    const customCheckbox = box.nextElementSibling;
+                    customCheckbox.textContent = index + 1;
+                });
+            }
+
+            renderTimetable();
+        }
+    });
+    </script>
+</body>
+</html>
