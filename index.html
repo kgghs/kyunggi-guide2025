@@ -193,15 +193,18 @@
         </footer>
     </div>
     
-    <!-- Modal Structure -->
+    <!-- Modal Structure (Revised) -->
     <div id="pdf-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 id="modal-title" class="text-xl font-bold text-gray-800">과목 상세 정보</h3>
                 <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
             </div>
-            <div class="flex-grow p-4">
-                <iframe id="pdf-iframe" src="" class="w-full h-full border-0"></iframe>
+            <div id="modal-content" class="flex-grow p-6 space-y-4 overflow-y-auto">
+                <!-- Content will be injected by JS -->
+            </div>
+            <div class="p-4 border-t bg-gray-50 text-right">
+                <a id="pdf-download-link" href="" target="_blank" rel="noopener noreferrer" class="bg-[#587D71] text-white px-4 py-2 rounded-lg hover:bg-[#4B5D55] transition-colors">가이드북에서 자세히 보기 (PDF)</a>
             </div>
         </div>
     </div>
@@ -513,7 +516,6 @@
         const filterContainer = document.getElementById('filter-container');
         const modal = document.getElementById('pdf-modal');
         const modalTitle = document.getElementById('modal-title');
-        const pdfIframe = document.getElementById('pdf-iframe');
         const closeModalBtn = document.getElementById('close-modal-btn');
         let currentFilter = '전체';
 
@@ -528,17 +530,37 @@
             }
         };
         
-        const openModal = (pageNumber, courseName) => {
-            if (!pageNumber || !modal || !modalTitle || !pdfIframe) return;
-            modalTitle.textContent = `${courseName} 상세 정보`;
-            pdfIframe.src = `${PDF_FILE}#page=${pageNumber}`;
+        const openModal = (course) => {
+            const modalContent = document.getElementById('modal-content');
+            const pdfDownloadLink = document.getElementById('pdf-download-link');
+            if (!course || !modal || !modalTitle || !modalContent || !pdfDownloadLink) return;
+
+            modalTitle.textContent = `${course.name} 상세 정보`;
+
+            // Populate modal content with course description
+            modalContent.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <span class="${getTypeClass(course.type)}">${course.type}</span>
+                        <p class="text-sm text-gray-500 mt-2">개설 학기: ${course.grade}</p>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed text-base">${course.description || '상세 설명이 없습니다.'}</p>
+                </div>
+            `;
+
+            // Set the link to the specific page of the PDF, to be opened in a new tab
+            pdfDownloadLink.href = course.pdfPage ? `${PDF_FILE}#page=${course.pdfPage}` : PDF_FILE;
+            
             modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
         };
 
         const closeModal = () => {
-            if(!modal || !pdfIframe) return;
+            const modalContent = document.getElementById('modal-content');
+            if(!modal || !modalContent) return;
             modal.classList.add('hidden');
-            pdfIframe.src = '';
+            modalContent.innerHTML = ''; // Clear content to be clean for next time
+            document.body.style.overflow = ''; // Restore background scrolling
         };
 
         const createCourseCard = (course) => {
@@ -747,8 +769,8 @@
                     }
                 });
 
-                if (foundCourse && foundCourse.pdfPage) {
-                    openModal(foundCourse.pdfPage, foundCourse.name);
+                if (foundCourse) {
+                    openModal(foundCourse);
                 }
             }
         });
