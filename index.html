@@ -537,7 +537,16 @@
 
             modalTitle.textContent = `${course.name} 상세 정보`;
 
-            // Populate modal content with course description
+            // Populate modal content with course description and page number
+            let pageInfoHTML = '';
+            if (course.pdfPage) {
+                pageInfoHTML = `
+                    <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded-r-lg">
+                        <p class="font-semibold">📖 가이드북 ${course.pdfPage}페이지에서 더 자세한 내용을 확인할 수 있습니다.</p>
+                    </div>
+                `;
+            }
+
             modalContent.innerHTML = `
                 <div class="space-y-4">
                     <div>
@@ -545,8 +554,10 @@
                         <p class="text-sm text-gray-500 mt-2">개설 학기: ${course.grade}</p>
                     </div>
                     <p class="text-gray-700 leading-relaxed text-base">${course.description || '상세 설명이 없습니다.'}</p>
+                    ${pageInfoHTML}
                 </div>
             `;
+
 
             // Set the link to the specific page of the PDF, to be opened in a new tab
             pdfDownloadLink.href = course.pdfPage ? `${PDF_FILE}#page=${course.pdfPage}` : PDF_FILE;
