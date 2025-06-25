@@ -174,28 +174,6 @@
                         <p class="mt-1"><strong>(1차 수강신청 기간: 25.7.7~25.7.10)</strong></p>
                     </div>
                 </div>
-                
-                 <div class="bg-white p-6 rounded-2xl shadow-sm mb-8">
-                    <h3 class="text-xl font-bold text-[#4B5D55] mb-4">학년별 학교지정과목 안내</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-bold mb-2">2학년 1학기</h4>
-                            <ul><li>문학</li><li>대수</li><li>영어Ⅰ</li><li>스포츠생활1</li></ul>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-bold mb-2">2학년 2학기</h4>
-                            <ul><li>독서와 작문</li><li>미적분</li><li>영어Ⅱ</li><li>스포츠생활2</li></ul>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-bold mb-2">3학년 1학기</h4>
-                            <ul><li>화법과 언어</li><li>확률과 통계</li><li>영어독해와 작문</li><li>스포츠 문화</li></ul>
-                        </div>
-                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-bold mb-2">3학년 2학기</h4>
-                            <ul><li>스포츠 과학</li></ul>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div id="validation-panel" class="lg:col-span-3 p-6 bg-white rounded-2xl shadow-sm self-start">
@@ -1004,7 +982,7 @@
         if(openPdfBtn) {
             openPdfBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const pdfUrl = 'https://kgghs.github.io/kyunggi-guide2025/pdf/편제표.pdf';
+                const pdfUrl = 'https://kgghs.github.io/kyunggi-guide2025/2025%ED%95%99%EB%85%84%EB%8F%84%20%EC%9E%85%ED%95%99%EC%83%9D%20%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95%20%EC%84%A0%ED%83%9D%20%EA%B0%80%EC%9D%B4%EB%93%9C%EB%B6%81.pdf';
                 if(pdfIframe) pdfIframe.src = pdfUrl;
                 if(pdfModal) pdfModal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
