@@ -179,7 +179,7 @@
                     <div id="validation-panel" class="lg:col-span-3 p-6 bg-white rounded-2xl shadow-sm self-start">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-bold text-[#4B5D55]">과목 선택 전 체크! [교과(군)별 필수이수학점 안내]</h3>
-                            <a href="#" id="open-curriculum-pdf" class="text-sm font-semibold text-blue-600 hover:underline">우리학교 교육과정 편제표 보기 click</a>
+                            <a href="https://kgghs.github.io/kyunggi-guide2025/2025학년도 입학생 교육과정 선택 가이드북.pdf#page=23" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-blue-600 hover:underline">경기여고 교육과정 참조(가이드북23p)</a>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm border-collapse">
@@ -267,19 +267,6 @@
             </div>
             <div id="modal-content" class="flex-grow p-2 md:p-4 overflow-y-auto">
                 <!-- Image will be injected here -->
-            </div>
-        </div>
-    </div>
-    
-    <!-- PDF Viewer Modal -->
-     <div id="pdf-viewer-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b">
-                <h3 class="text-xl font-bold text-gray-800">교육과정 편제표</h3>
-                <button id="close-pdf-modal-btn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            <div class="flex-grow p-2 overflow-hidden">
-                <iframe id="pdf-iframe" src="" class="w-full h-full" frameborder="0"></iframe>
             </div>
         </div>
     </div>
@@ -982,7 +969,7 @@
         if(openPdfBtn) {
             openPdfBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const pdfUrl = 'https://kgghs.github.io/kyunggi-guide2025/2025%ED%95%99%EB%85%84%EB%8F%84%20%EC%9E%85%ED%95%99%EC%83%9D%20%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95%20%EC%84%A0%ED%83%9D%20%EA%B0%80%EC%9D%B4%EB%93%9C%EB%B6%81.pdf';
+                const pdfUrl = 'https://kgghs.github.io/kyunggi-guide2025/편제표.pdf';
                 if(pdfIframe) pdfIframe.src = pdfUrl;
                 if(pdfModal) pdfModal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
