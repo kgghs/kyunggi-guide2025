@@ -177,9 +177,12 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div id="validation-panel" class="lg:col-span-3 p-6 bg-white rounded-2xl shadow-sm self-start">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-[#4B5D55]">과목 선택 전 체크! [교과(군)별 필수이수학점 안내]</h3>
-                            <a href="https://kgghs.github.io/kyunggi-guide2025/2025학년도 입학생 교육과정 선택 가이드북.pdf#page=23" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-blue-600 hover:underline">경기여고 교육과정 참조(가이드북23p)</a>
+                        <div class="flex justify-between items-start mb-4">
+                             <div>
+                                <p class="text-sm font-bold text-orange-500">과목 선택 전 체크!</p>
+                                <h3 class="text-xl font-bold text-[#4B5D55]">'교과(군)별 필수이수학점 안내'</h3>
+                             </div>
+                             <span class="text-sm font-semibold text-gray-500">경기여고 교육과정 참조(가이드북23p)</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm border-collapse">
@@ -196,7 +199,7 @@
                                         <td class="border p-2 font-semibold">국어</td>
                                         <td class="border p-2">8</td>
                                         <td class="border p-2 text-green-600 font-bold">O</td>
-                                        <td class="border p-2 text-left align-middle" rowspan="3"><strong class="text-blue-600 font-bold text-lg">8과목 이하(25학점 이내) 선택</strong><br><span class="text-xs">(국어/수학/영어(군)은 3년간 81학점을 초과할 수 없음, 학교지정과목으로 56학점 이수)</span></td>
+                                        <td class="border p-2 text-left align-middle" rowspan="3"><strong class="text-blue-600 font-bold text-lg">8과목 이하(25학점 이내) 선택</strong><br><span class="text-xs">(국어/수학/영어(군)은 3년간 81학점을 초과할 수 없으며, 학교지정과목으로 56학점 이수)</span></td>
                                     </tr>
                                     <tr>
                                         <td class="border p-2 font-semibold">수학</td>
@@ -224,13 +227,13 @@
                                         <td class="border p-2 font-semibold">기술가정/정보/제2외국어</td>
                                         <td class="border p-2">16</td>
                                         <td class="border p-2 text-red-600 font-bold">X</td>
-                                        <td class="border p-2 text-left"><strong class="text-lg text-green-600 font-bold">4과목 이상</strong>(11학점 이상) 이수해야 함.<br>1학년에서 논술(2)+기가/정보(3)=5학점 취득</td>
+                                        <td class="border p-2 text-left"><strong class="text-lg text-green-600 font-bold">4과목 이상</strong>(11학점 이상) 이수해야 함.<br>(1학년에서 논술(2)+기가/정보(3)=5학점 취득)</td>
                                     </tr>
                                      <tr>
                                         <td class="border p-2 font-semibold">예술</td>
                                         <td class="border p-2">10</td>
                                         <td class="border p-2 text-red-600 font-bold">X</td>
-                                        <td class="border p-2 text-left"><strong class="text-lg text-purple-600 font-bold">2과목 이상</strong>(6학점 이상) 이수해야 함.<br>1학년에서 미술(2)+음악(2)=4학점 취득</td>
+                                        <td class="border p-2 text-left"><strong class="text-lg text-purple-600 font-bold">2과목 이상</strong>(6학점 이상) 이수해야 함.<br>(1학년에서 미술(2)+음악(2)=4학점 취득)</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -244,6 +247,11 @@
             
             <section id="conclusion" class="text-center">
                  <div class="bg-white p-8 rounded-2xl shadow-sm">
+                    <div class="mb-8">
+                        <a href="https://kgg.riroschool.kr/" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#587D71] text-white font-bold py-3 px-8 rounded-full hover:bg-[#4B5D55] transition-transform transform hover:scale-105">
+                           리로스쿨>교육과정> '수강신청' 바로가기
+                        </a>
+                    </div>
                     <h2 class="text-2xl font-bold mb-6 section-title mx-auto text-[#4B5D55]">여러분의 빛나는 미래를 응원하며</h2>
                     <div class="space-y-6 text-gray-700 max-w-3xl mx-auto leading-relaxed">
                         <p>과목선택 가이드를 경직된 규칙이 아닌, 자신만의 길을 개척하는 데 필요한 나만의 나침반으로 활용하세요. 끊임없이 자신에게 질문하고, 선생님과 상담하며 가장 '나다운' 교육과정을 만들어가기를 바랍니다. 과목 선택이라는 기회를 통해, 자신만의 고유한 색깔로 빛나는 미래를 그려나가기를 진심으로 응원합니다.</p>
@@ -768,9 +776,9 @@
             areaOrder.forEach(area => {
                 content += `<div class="domain-area-container border-t-4 ${areaColors[area]}">`;
                 content += `<h3 class="text-2xl font-bold text-center mb-6 text-gray-800">${area} 영역</h3>`;
-                const typeOrder = ['공통과목', '일반선택', '진로선택', '융합선택'];
+                const typeOrder = ['일반선택', '진로선택', '융합선택']; 
                 typeOrder.forEach(type => {
-                    const coursesOfType = data[area].filter(c => c.type !== '공통과목');
+                    const coursesOfType = data[area].filter(c => c.type === type); 
                     coursesOfType.sort((a,b) => (a.grade || 'Z').localeCompare(b.grade || 'Z'));
                     if (coursesOfType.length > 0) {
                         content += `<div class="mb-4">`;
